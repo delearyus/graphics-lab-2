@@ -50,7 +50,7 @@ function Cube() {
 
     var face_normals = [
         vec4(0.0, 0.0, 1.0, 0.0),  // front
-        vec4(1.0, 0.0, -1.0, 0.0), // back
+        vec4(0.0, 0.0, -1.0, 0.0), // back
         vec4(-1.0, 0.0, 0.0, 0.0), // left
         vec4(1.0, 0.0, 0.0, 0.0),  // right
         vec4(0.0, 1.0, 0.0, 0.0),  // top

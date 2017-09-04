@@ -8,7 +8,9 @@
 
 var Shapes = {};   // set up Shapes namespace
 
-Shapes.cube = new Cube();  // global
+Shapes.cube     = new Cube();  // global
+Shapes.pyramid = new Pyramid();
+Shapes.cylinder = new Cylinder(8);
 // TO DO:  DECLARE OTHER SHAPES
 
 /**
@@ -17,6 +19,8 @@ Shapes.cube = new Cube();  // global
  */
 Shapes.initShapes = function () {
     Shapes.initBuffers(Shapes.cube);
+    Shapes.initBuffers(Shapes.pyramid);
+    Shapes.initBuffers(Shapes.cylinder);
     // TO DO:  INITIALIZE OTHER SHAPES
 };
 
@@ -75,6 +79,12 @@ Shapes.initBuffers = function (primitive) {
     gl.bindBuffer(gl.ARRAY_BUFFER, primitive.edgeColorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, flatten(edgeColors), gl.STATIC_DRAW);
     gl.bindBuffer(gl.ARRAY_BUFFER, null); // done with this buffer
+
+    console.log("Buffer Lengths:");
+    console.log(flatten(primitive.vertices).length);
+    console.log(flatten(primitive.colors).length);
+    console.log(flatten(edges).length);
+    console.log(flatten(edgeColors).length);
 };
 
 /**

@@ -13,6 +13,8 @@ var theta = [0, 0, 0];  // rotation around each axis
 
 var shape = Shapes.cube; // shape to be drawn
 
+var newcyl;
+
 window.onload = function init()
 {
     canvas = document.getElementById("gl-canvas");
@@ -62,13 +64,28 @@ function initWindowListeners()  {
     };
     document.getElementById("ShapesChoice").onclick = function (event) {
         var x = document.getElementById("ShapesChoice").selectedIndex;
+        updateInfo();
         switch (x) {   // cube=0, cylinder=1, cone=2, disk=3
             case 0:
                 shape = Shapes.cube;
                 break;
+            case 1:
+                shape = Shapes.pyramid;
+                break;
+            case 2:
+                shape = Shapes.cylinder;
+                break;
             // TO DO:  ADD OTHER CASES FOR OTHER SHAPES
         }
     };
+    document.getElementById("numEdges").addEventListener('input', function (event) {
+        var e = document.getElementById("numEdges").value;
+        document.getElementById("curEdges").innerHTML = e;
+        newcyl = new Cylinder(e);
+        Shapes.cylinder = newcyl;
+        Shapes.initBuffers(Shapes.cylinder);
+        shape = Shapes.cylinder;
+    });
 }
 
 function cameraSetup() {
@@ -100,3 +117,18 @@ function render()
     requestAnimFrame(render);
 }
 
+function updateInfo() {
+    var x = document.getElementById("ShapesChoice").selectedIndex;
+    var cylinfo = document.getElementById("CylinderInfo");
+    switch (x) {
+        case 0:
+            cylinfo.style.display = 'none';
+            break;
+        case 1:
+            cylinfo.style.display = 'none';
+            break;
+        case 2:
+            cylinfo.style.display = 'block';
+            break;
+    }
+}

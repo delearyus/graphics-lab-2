@@ -5,14 +5,14 @@
        attribute vec4 vColor;
        uniform   mat4 uProjection; // projection matrix
        uniform   mat4 uModel_view; // model view matrix
- 
+
        varying vec4 color;
-            
-       void main() 
+
+       void main()
        {
            color = vColor;
            gl_Position = uProjection * uModel_view * vPosition;
-       } 
+       }
     </script>
 
     <script id="fragment-shader" type="x-shader/x-fragment">
@@ -31,6 +31,8 @@
     <script type="text/javascript" src="../Common/initShaders.js"></script>
     <script type="text/javascript" src="../Common/MV.js"></script>
     <script type="text/javascript" src="geometry/Cube.js"></script>
+    <script type="text/javascript" src="geometry/Pyramid.js"></script>
+    <script type="text/javascript" src="geometry/Cylinder.js"></script>
     <!-- TO DO:  ADD OTHER SHAPE FILES HERE -->
     <script type="text/javascript" src="geometry/Shapes.js"></script>
     <script type="text/javascript" src="render_scene.js"></script>
@@ -51,8 +53,19 @@
 
         <select id="ShapesChoice">
             <option value="0">Cube</option>
+            <option value="1">Pyramid</option>
+            <option value="2">Cylinder</option>
             <!-- TO DO:  ADD OTHER SHAPES -->
         </select>
+
+        <br/>
+        <br/>
+
+        <div style="display:none;" id="CylinderInfo">
+          Number of Divisions:<br/>
+          2 <input id="numEdges" type=range min=2 max=32 value="8" /> 32
+          (<span id=curEdges>8</span>)
+        </div>
 
     </body>
 </html>
