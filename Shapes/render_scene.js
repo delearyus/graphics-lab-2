@@ -1,6 +1,6 @@
 var canvas;       // HTML 5 canvas
 var gl;           // webgl graphics context
-var vPosition;    // shader variable attrib location for vertices 
+var vPosition;    // shader variable attrib location for vertices
 var vColor;       // shader variable attrib location for color
 var uProjection;  //  shader uniform variable for projection matrix
 var uModel_view;  //  shader uniform variable for model-view matrix
@@ -13,7 +13,7 @@ var theta = [0, 0, 0];  // rotation around each axis
 
 var shape = Shapes.cube; // shape to be drawn
 
-var newcyl;
+var bOutline = false;
 
 window.onload = function init()
 {
@@ -30,8 +30,8 @@ window.onload = function init()
 
     shaderSetup();   // set up the shaders
 
-    Shapes.initShapes();  // create all primitive shapes    
-    
+    Shapes.initShapes(bOutline);  // create all primitive shapes
+
     initWindowListeners(); // setup button controls
 
     render();  // Go draw the scene!
@@ -45,14 +45,14 @@ function shaderSetup() {
     // get location of shader variables. We will need these in setting up buffers
     vPosition = gl.getAttribLocation(program, "vPosition");
     vColor = gl.getAttribLocation(program, "vColor");
-    
+
     // uniform variables for the camera settings
     uProjection = gl.getUniformLocation(program, "uProjection");
-    uModel_view = gl.getUniformLocation(program, "uModel_view");   
+    uModel_view = gl.getUniformLocation(program, "uModel_view");
 }
 
 function initWindowListeners()  {
-    //event listeners for buttons   
+    //event listeners for buttons
     document.getElementById("xButton").onclick = function () {
         axis = xAxis;
     };
@@ -62,21 +62,30 @@ function initWindowListeners()  {
     document.getElementById("zButton").onclick = function () {
         axis = zAxis;
     };
+    document.getElementById("bOutline").onclick = function () {
+        bOutline = document.getElementById("bOutline").checked;
+        Shapes.initBuffers(shape,bOutline);
+    };
     document.getElementById("ShapesChoice").onclick = function (event) {
         var x = document.getElementById("ShapesChoice").selectedIndex;
         updateInfo();
         switch (x) {   // cube=0, cylinder=1, cone=2, disk=3
             case 0:
                 shape = Shapes.cube;
+                Shapes.initBuffers(shape,bOutline);
                 break;
             case 1:
                 shape = Shapes.pyramid;
+                Shapes.initBuffers(shape,bOutline);
                 break;
             case 2:
                 shape = Shapes.cylinder;
+                Shapes.initBuffers(shape,bOutline);
                 break;
             case 3:
                 shape = Shapes.cone;
+                Shapes.initBuffers(shape,bOutline);
+                break;
             // TO DO:  ADD OTHER CASES FOR OTHER SHAPES
         }
     };
@@ -85,7 +94,7 @@ function initWindowListeners()  {
         document.getElementById("coneCurEdges").innerHTML = e;
         newcone = new Cone(e);
         Shapes.cone = newcone;
-        Shapes.initBuffers(Shapes.cone);
+        Shapes.initBuffers(Shapes.cone, bOutline);
         shape = Shapes.cone;
     });
     document.getElementById("cylNumEdges").addEventListener('input', function (event) {
@@ -93,15 +102,16 @@ function initWindowListeners()  {
         document.getElementById("cylCurEdges").innerHTML = e;
         newcyl = new Cylinder(e);
         Shapes.cylinder = newcyl;
-        Shapes.initBuffers(Shapes.cylinder);
+        Shapes.initBuffers(Shapes.cylinder, bOutline);
         shape = Shapes.cylinder;
     });
 }
 
 function cameraSetup() {
-    // All of this is to get the camera set properly. We will 
+    // All of this is to get the camera set properly. We will
     // learn about this in Lab 4
-    theta[axis] += 1.0;  // increase rotation about chosen axis
+    var pause = document.getElementById("pauseButton");
+    if (!(pause.checked)) {theta[axis] += 1.0; }; // increase rotation about chosen axis
     var eye = vec3(0.0, 0.0, 2.0);
     var at = vec3(0, 0, 0);
     var up = vec3(0, 1, 0);
@@ -110,7 +120,7 @@ function cameraSetup() {
     viewMat = mult(viewMat, axisRot);
     viewMat = mult(viewMat, scalem(.5,.5,.5));
     gl.uniformMatrix4fv(uModel_view, false, flatten(viewMat));
-    
+
     var projMat = perspective(60, canvas.width / canvas.height, 0.1, 500.);
     gl.uniformMatrix4fv(uProjection, false, flatten(projMat));
 }
@@ -118,7 +128,7 @@ function cameraSetup() {
 function render()
 {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    
+
     cameraSetup();
 
     // draw the shape!

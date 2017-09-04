@@ -18,11 +18,11 @@ Shapes.cone = new Cone(8);
  * Create and load the buffers for all of the primitive shapes.
  * @return {undefined}
  */
-Shapes.initShapes = function () {
-    Shapes.initBuffers(Shapes.cube);
-    Shapes.initBuffers(Shapes.pyramid);
-    Shapes.initBuffers(Shapes.cylinder);
-    Shapes.initBuffers(Shapes.cone);
+Shapes.initShapes = function (bOutline) {
+    Shapes.initBuffers(Shapes.cube, bOutline);
+    Shapes.initBuffers(Shapes.pyramid, bOutline);
+    Shapes.initBuffers(Shapes.cylinder, bOutline);
+    Shapes.initBuffers(Shapes.cone, bOutline);
     // TO DO:  INITIALIZE OTHER SHAPES
 };
 
@@ -31,7 +31,7 @@ Shapes.initShapes = function () {
  * @param {type} primitive 
  * @return {undefined}
  */
-Shapes.initBuffers = function (primitive) {
+Shapes.initBuffers = function (primitive,bOutline) {
 
     // SET UP ARRAY BUFFER FOR VERTICES 
     ////////////////////////////////////////////////////////////
@@ -47,46 +47,58 @@ Shapes.initBuffers = function (primitive) {
     gl.bufferData(gl.ARRAY_BUFFER, flatten(primitive.colors), gl.STATIC_DRAW);
     gl.bindBuffer(gl.ARRAY_BUFFER, null); // done with this buffer
 
-    // CALCULATE EDGES FROM THE VERTICES FOR SHAPE OUTLINES 
-    // Don't need to do this unless you want an outline 
-    var edges = [];
-    for (var i = 0; i < primitive.numTriangles; i++) {
-        edges.push(primitive.vertices[i * 3 + 0]);
-        edges.push(primitive.vertices[i * 3 + 1]);
-        edges.push(primitive.vertices[i * 3 + 1]);
-        edges.push(primitive.vertices[i * 3 + 2]);
-        edges.push(primitive.vertices[i * 3 + 2]);
-        edges.push(primitive.vertices[i * 3 + 0]);
-    }
+    if (bOutline) {
 
-    primitive.numEdgeVertices = edges.length;
+        // CALCULATE EDGES FROM THE VERTICES FOR SHAPE OUTLINES 
+        // Don't need to do this unless you want an outline 
+        var edges = [];
+        for (var i = 0; i < primitive.numTriangles; i++) {
+            edges.push(primitive.vertices[i * 3 + 0]);
+            edges.push(primitive.vertices[i * 3 + 1]);
+            edges.push(primitive.vertices[i * 3 + 1]);
+            edges.push(primitive.vertices[i * 3 + 2]);
+            edges.push(primitive.vertices[i * 3 + 2]);
+            edges.push(primitive.vertices[i * 3 + 0]);
+        }
 
-    // SET UP ARRAY BUFFER FOR EDGES     
-    ////////////////////////////////////////////////////////////
-    primitive.edgeBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, primitive.edgeBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, flatten(edges), gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);  // done with this buffer
+        primitive.numEdgeVertices = edges.length;
 
-    // SET UP ARRAY BUFFER FOR EDGE COLORS 
-    ////////////////////////////////////////////////////////////
-    var edgeColors = [];
-    for (var i = 0; i < edges.length; i++) {
-        edgeColors.push([0.0, 0.0, 0.0, 1.0]);
-    }
+        // SET UP ARRAY BUFFER FOR EDGES     
+        ////////////////////////////////////////////////////////////
+        primitive.edgeBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, primitive.edgeBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, flatten(edges), gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);  // done with this buffer
 
-    // SET UP ARRAY BUFFER FOR EDGE COLORS     
-    ////////////////////////////////////////////////////////////
-    primitive.edgeColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, primitive.edgeColorBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, flatten(edgeColors), gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null); // done with this buffer
+        // SET UP ARRAY BUFFER FOR EDGE COLORS 
+        ////////////////////////////////////////////////////////////
+        var edgeColors = [];
+        for (var i = 0; i < edges.length; i++) {
+            edgeColors.push([0.0, 0.0, 0.0, 1.0]);
+        }
+
+        // SET UP ARRAY BUFFER FOR EDGE COLORS     
+        ////////////////////////////////////////////////////////////
+        primitive.edgeColorBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, primitive.edgeColorBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, flatten(edgeColors), gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, null); // done with this buffer
+
+    } else {
+
+        if (primitive.edgeBuffer) { gl.deleteBuffer(primitive.edgeBuffer); };
+        if (primitive.edgeColorBuffer) {
+            gl.deleteBuffer(primitive.edgeColorBuffer);
+        };
+    };
 
     console.log("Buffer Lengths:");
     console.log(flatten(primitive.vertices).length);
     console.log(flatten(primitive.colors).length);
-    console.log(flatten(edges).length);
-    console.log(flatten(edgeColors).length);
+    if (bOutline) {
+        console.log(flatten(edges).length);
+        console.log(flatten(edgeColors).length);
+    }
 };
 
 /**
