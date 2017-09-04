@@ -11,6 +11,7 @@ var Shapes = {};   // set up Shapes namespace
 Shapes.cube     = new Cube();  // global
 Shapes.pyramid = new Pyramid();
 Shapes.cylinder = new Cylinder(8);
+Shapes.cone = new Cone(8);
 // TO DO:  DECLARE OTHER SHAPES
 
 /**
@@ -21,6 +22,7 @@ Shapes.initShapes = function () {
     Shapes.initBuffers(Shapes.cube);
     Shapes.initBuffers(Shapes.pyramid);
     Shapes.initBuffers(Shapes.cylinder);
+    Shapes.initBuffers(Shapes.cone);
     // TO DO:  INITIALIZE OTHER SHAPES
 };
 

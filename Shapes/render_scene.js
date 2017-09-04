@@ -75,12 +75,22 @@ function initWindowListeners()  {
             case 2:
                 shape = Shapes.cylinder;
                 break;
+            case 3:
+                shape = Shapes.cone;
             // TO DO:  ADD OTHER CASES FOR OTHER SHAPES
         }
     };
-    document.getElementById("numEdges").addEventListener('input', function (event) {
-        var e = document.getElementById("numEdges").value;
-        document.getElementById("curEdges").innerHTML = e;
+    document.getElementById("coneNumEdges").addEventListener('input', function (event) {
+        var e = document.getElementById("coneNumEdges").value;
+        document.getElementById("coneCurEdges").innerHTML = e;
+        newcone = new Cone(e);
+        Shapes.cone = newcone;
+        Shapes.initBuffers(Shapes.cone);
+        shape = Shapes.cone;
+    });
+    document.getElementById("cylNumEdges").addEventListener('input', function (event) {
+        var e = document.getElementById("cylNumEdges").value;
+        document.getElementById("cylCurEdges").innerHTML = e;
         newcyl = new Cylinder(e);
         Shapes.cylinder = newcyl;
         Shapes.initBuffers(Shapes.cylinder);
@@ -120,15 +130,23 @@ function render()
 function updateInfo() {
     var x = document.getElementById("ShapesChoice").selectedIndex;
     var cylinfo = document.getElementById("CylinderInfo");
+    var coneinfo = document.getElementById("ConeInfo");
     switch (x) {
         case 0:
             cylinfo.style.display = 'none';
+            coneinfo.style.display = 'none';
             break;
         case 1:
             cylinfo.style.display = 'none';
+            coneinfo.style.display = 'none';
             break;
         case 2:
             cylinfo.style.display = 'block';
+            coneinfo.style.display = 'none';
+            break;
+        case 3:
+            cylinfo.style.display = 'none';
+            coneinfo.style.display = 'block';
             break;
     }
 }
