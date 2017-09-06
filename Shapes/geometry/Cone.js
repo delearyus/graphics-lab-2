@@ -42,7 +42,7 @@ function Cone(n) { //n is the number of 'sides' around the cone
         plSides[i] = pTemp;
     }
 
-    console.log(plSides);
+    //console.log(plSides);
 
     // local variables - triangles //
 
@@ -61,14 +61,14 @@ function Cone(n) { //n is the number of 'sides' around the cone
         flTop.splice(   i*3, 3, pTop,    plSides[i], plSides[j]);
     }
 
-    console.log(flBottom);
+    //console.log(flBottom);
 
     // local variables - colors //
 
     clColors = new Array(n); //each 'slice' has its own color
     for (var i = 0; i < n; i++) {
         p = i > n / 2 ? 1 - (2 * (i - (n / 2)) / n) : 2 * i / n;
-        //percentage of the way through the iteration
+        //percentage of the way through the iteration, going 0 to 1 to 0 again
         cTemp = vec4(0.5, p, p, 1.0); //always has r=0.5, g & b go from 0 to 1.
                                       //creating a nice maroon-to-cyan gradient
         clColors[i] = cTemp;
@@ -85,7 +85,7 @@ function Cone(n) { //n is the number of 'sides' around the cone
         this.colors.splice(i*6, 6, k, k, k, k, k, k);
 
     }
-    console.log(this.vertices);
-    console.log(this.colors);
+    //console.log(this.vertices);
+    //console.log(this.colors);
 
 }
